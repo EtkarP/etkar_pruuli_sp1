@@ -20,11 +20,24 @@ class DeliverDriver extends Employee {
   }
 }
 
-
 async function staffUserGet() {
   const response = await fetch('https://randomuser.me/api/?results=5&inc=name,email,picture,')
-  const data = await response.json()
-  const staff = data.results.map(user => new StaffMember(user.name.first, user.name.last, user.picture.large, user.email))
-  return staff
+  staff = await response.json()
+  staff = staff.results.map(staffMember => 
+  new StaffMember(staffMember.name.first, staffMember.name.last, staffMember.picture.medium, staffMember.email))
+  tableData=""
+  staff.map(staffMembers => {
+    tableData += 
+    `<tr>
+    <td><img src="${staffMembers.photo}"></td>
+    <td>${staffMembers.name}</td>
+    <td>${staffMembers.surename}</td>
+    <td>${staffMembers.email}</td>
+    <td id="status">In</td>
+    <td id="outtime"></td>
+    <td id="duration"></td>
+    <td id="expectedreturntime"></td>
+    </tr>`})
+    document.getElementById("staffmembers").innerHTML = tableData
 }
-
+staffUserGet()
