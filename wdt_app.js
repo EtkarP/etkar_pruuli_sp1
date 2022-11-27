@@ -38,22 +38,32 @@ async function staffUserGet() {
     <td id="duration"></td>
     <td id="expectedreturntime"></td>
     </tr>`})
-    document.getElementById("staffmembers").innerHTML = tableData
+  document.getElementById("staffmembers").innerHTML = tableData
+}
 
-    $(document).ready(function(){
-      $(document.body).on('click', '#stafftablerow', function(){
-        $(this).toggleClass('selected')
-      })
-      
-      $("#clockout").click(function(){
-        let absence = parseInt(prompt("Please enter the duration of absence in minutes"))
-        let selected = $(".selected")
-        selected.find("#status").text("Out")
-        selected.find("#outtime").text(moment().format('HH:mm'))
-        selected.find("#duration").text(absence)
-        selected.find("#expectedreturntime").text(moment().add(absence, 'minutes').format('HH:mm'))
-      })
-    })
-  }
+$(document).ready(function(){
+  $(document.body).on('click', '#stafftablerow', function(){$(this).toggleClass('selected')})
+})
+
+$("#clockout").click(function(){
+  absence = parseInt(prompt("Please enter the duration of absence in minutes"))
+  selected = $(".selected")
+  selected.find("#status").text("Out")
+  selected.find("#outtime").text(moment().format('HH:mm'))
+  selected.find("#duration").text(absence)
+  selected.find("#expectedreturntime").text(moment().add(absence, 'minutes').format('HH:mm'))
+})
+
+$("#clockin").click(function(){
+  selected = $(".selected")
+  
+  selected.find("#status").text("In")
+  selected.find("#outtime").text("")
+  selected.find("#duration").text("")
+  selected.find("#expectedreturntime").text("")
+})
+
 
 staffUserGet()
+
+
