@@ -1,7 +1,7 @@
 class Employee {
   constructor(name, surename) {
-    this.name = name;
-    this.surename = surename;
+    this.name = name
+    this.surename = surename
    }
 }
 
@@ -14,7 +14,7 @@ class StaffMember extends Employee {
     this.outtime = ""
     this.duration = ""
     this.expectedReturnTime = ""
-    this.id = Date.now()
+    this.id = "staffID" + setTimeout( Date.now(), 1)
   }
 }
 class DeliverDriver extends Employee {
@@ -24,32 +24,42 @@ class DeliverDriver extends Employee {
     this.telephone = telephone
     this.deliveryAddress = deliveryAddress
     this.returnTime = returnTime
+    this.id = "driverID" + setTimeout( Date.now(), 1)
   }
 }
 
-async function staffUserGet() {
+const staff = []
+async function staffUserGet(){
   const response = await fetch('https://randomuser.me/api/?results=5&inc=name,email,picture,id')
-  staff = await response.json()
-  staff = await staff.results.map(staffMember => 
+  staffData = await response.json()
+  staffData = await staffData.results.map(staffMember => 
   new StaffMember(staffMember.name.first, staffMember.name.last, staffMember.picture.medium, staffMember.email))
+  staff.push(...staffData)
+  addStaff()
+}
+
+
+function addStaff(){
   staffTableData=""
   staff.map(staffMembers => {
     staffTableData += 
-    `<tr class="stafftablerow">
+    `<tr id=${staffMembers.id} class="stafftablerow">
     <td id="photo"><img src="${staffMembers.photo}"></td>
     <td id="name">${staffMembers.name}</td>
     <td id="surename">${staffMembers.surename}</td>
     <td id="email">${staffMembers.email}</td>
-    <td id="status">In</td>
+    <td id="status">${staffMembers.status}</td>
     <td id="outtime"></td>
     <td id="duration"></td>
     <td id="expectedreturntime"></td>
-    </tr>`})
-  document.getElementById("staffmembers").innerHTML = staffTableData //NOT WORKING WITH JQUERY FOR SOME REASON
+    </tr>`
+    document.getElementById("staffmembers").innerHTML = staffTableData //NOT WORKING WITH JQUERY FOR SOME REASON
+  })
 }
 
+
 $(document).ready(function(){
- $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selected')}) //NOT WORKING WITH $().click FOR SOME REASON
+  $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selected').siblings().removeClass('selected')})
 })
 
 
