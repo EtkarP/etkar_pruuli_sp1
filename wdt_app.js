@@ -4,19 +4,26 @@ class Employee {
     this.surename = surename;
    }
 }
+
 class StaffMember extends Employee {
-  constructor(name, surename, photo, email) {
+  constructor(name, surename, photo, email){
     super(name, surename)
     this.photo = photo
     this.email = email
+    this.status = "In"
+    this.outtime = ""
+    this.duration = ""
+    this.expectedReturnTime = ""
+    this.id = Date.now()
   }
 }
 class DeliverDriver extends Employee {
-  constructor(name, surename, vehicle, telephone, deliveryAddress){
+  constructor(name, surename, vehicle, telephone, deliveryAddress, returnTime){
     super(name, surename)
     this.vehicle = vehicle
     this.telephone = telephone
     this.deliveryAddress = deliveryAddress
+    this.returnTime = returnTime
   }
 }
 
@@ -25,9 +32,9 @@ async function staffUserGet() {
   staff = await response.json()
   staff = await staff.results.map(staffMember => 
   new StaffMember(staffMember.name.first, staffMember.name.last, staffMember.picture.medium, staffMember.email))
-  tableData=""
+  staffTableData=""
   staff.map(staffMembers => {
-    tableData += 
+    staffTableData += 
     `<tr class="stafftablerow">
     <td id="photo"><img src="${staffMembers.photo}"></td>
     <td id="name">${staffMembers.name}</td>
@@ -38,7 +45,7 @@ async function staffUserGet() {
     <td id="duration"></td>
     <td id="expectedreturntime"></td>
     </tr>`})
-  document.getElementById("staffmembers").innerHTML = tableData //NOT WORKING WITH JQUERY FOR SOME REASON
+  document.getElementById("staffmembers").innerHTML = staffTableData //NOT WORKING WITH JQUERY FOR SOME REASON
 }
 
 $(document).ready(function(){
@@ -73,7 +80,7 @@ function notifyDelay(staffName, staffSurename, staffPhoto, absence) {
   document.getElementById("toastConteiner").innerHTML = toastContent //NOT WORKING WITH JQUERY FOR SOME REASON
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
-  }, absence*100)
+  }, absence*60000)
   $(".selected").attr("timeoutid", timeoutID)
 }
 
@@ -100,4 +107,34 @@ $(document).ready(function notifyDelay(){
 staffUserGet()
 
 
+const drivers = []
+$(document).ready(function(){
+  $("#adddriver").click(function creteDeliveryDriver(){
+    vehicle = $("#vehicledata").val()
+    driverName = $("#namedata").val()
+    driverSurename = $("#surenamedata").val()
+    driverTelephone = $("#telephonedata").val()
+    driverAddress = $("#addressdata").val()
+    driverReturntime = $("#returntimedata").val()
+    drivers.push(new DeliverDriver(driverName, driverSurename, vehicle, driverTelephone, driverAddress, driverReturntime))
+    addDelivery()
+  })
+})
+
+
+function addDelivery(){
+  driversTableData=""
+  drivers.map(driver => {
+    driversTableData += 
+    `<tr class="deliverytablerow">
+    <td id="vehicle">${driver.vehicle}</td>
+    <td id="name">${driver.name}</td>
+    <td id="surename">${driver.surename}</td>
+    <td id="telephone">${driver.telephone}</td>
+    <td id="address">${driver.deliveryAddress}</td>
+    <td id="returntime">${driver.returnTime}</td>
+    </tr>`
+  })
+  document.getElementById("deliverydrivers").innerHTML = driversTableData //NOT WORKING WITH JQUERY FOR SOME REASON
+}
 
