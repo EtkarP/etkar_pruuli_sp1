@@ -4,7 +4,6 @@ class Employee {
     this.surename = surename
    }
 }
-
 class StaffMember extends Employee {
   constructor(name, surename, photo, email){
     super(name, surename)
@@ -28,15 +27,18 @@ class DeliverDriver extends Employee {
   }
 }
 
+
+
 const staff = []
-async function staffUserGet(){
+$(document).ready(async function staffUserGet(){
   const response = await fetch('https://randomuser.me/api/?results=5&inc=name,email,picture,id')
   staffData = await response.json()
   staffData = await staffData.results.map(staffMember => 
   new StaffMember(staffMember.name.first, staffMember.name.last, staffMember.picture.medium, staffMember.email))
   staff.push(...staffData)
   addStaff()
-}
+})
+
 
 
 function addStaff(){
@@ -58,93 +60,112 @@ function addStaff(){
 }
 
 
-$(document).ready(function(){
-  $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selected').siblings().removeClass('selected')})
+
+$("#clockout").click(function staffOut(){
+  duration = parseInt(prompt("Please enter the duration of absence in minutes"))
+  selectedStaffId = $(".selectedstaff").attr("id")
+  selectedStaffinArray = staff.find(staffMember => staffMember.id == selectedStaffId)
+  selectedStaffinArray.status = "Out"
+  selectedStaffinArray.outtime = moment().format('HH:mm')
+  selectedStaffinArray.duration = moment().startOf('day').add(duration, 'minutes').format('HH:mm')
+  selectedStaffinArray.expectedReturnTime = moment().add(duration, 'minutes').format('HH:mm')
+
+  selectedStaffInTable = $(".selectedstaff")
+  selectedStaffInTable.find("#status").text(selectedStaffinArray.status)
+  selectedStaffInTable.find("#outtime").text(selectedStaffinArray.outtime)
+  selectedStaffInTable.find("#duration").text(selectedStaffinArray.duration)
+  selectedStaffInTable.find("#expectedreturntime").text(selectedStaffinArray.expectedReturnTime)
+  
+  notifyDelay(selectedStaffinArray)
 })
 
 
-$("#clockout").click(function(){
-  absence = parseInt(prompt("Please enter the duration of absence in minutes"))
-  selected = $(".selected")
-  selected.find("#status").text("Out")
-  selected.find("#duration").text(moment().startOf('day').add(absence, 'minutes').format('HH:mm'))
-  selected.find("#outtime").text(moment().format('HH:mm'))
-  selected.find("#expectedreturntime").text(moment().add(absence, 'minutes').format('HH:mm')) 
-  staffName = selected.find("#name").text()
-  staffSurename = selected.find("#surename").text()
-  staffPhoto = selected.find("img").attr("src")
-  notifyDelay(staffName, staffSurename, staffPhoto, absence)
-})
 
-
-function notifyDelay(staffName, staffSurename, staffPhoto, absence) {
+function notifyDelay(selectedStaffinArray){
   timeoutID = setTimeout(() => {
   toastContent =
   `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
   <div class="toast-header">
-  <img src="${staffPhoto}" class="rounded me-2" alt="...">
-  <strong class="me-auto">${staffName} ${staffSurename} have been away for ${absence} minutes</strong>
+  <img src="${selectedStaffinArray.photo}" class="rounded me-2" alt="...">
+  <strong class="me-auto">${selectedStaffinArray.name} ${selectedStaffinArray.surename} <br> hase been away for <br> ${selectedStaffinArray.duration} minutes</strong>
   <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
   </div>`
   document.getElementById("toastConteiner").innerHTML = toastContent //NOT WORKING WITH JQUERY FOR SOME REASON
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
-  }, absence*60000)
+  }, duration*60000)
   $(".selected").attr("timeoutid", timeoutID)
 }
 
 
-$("#clockin").click(function(){
-  selected = $(".selected")
-  selected.find("#status").text("In")
-  selected.find("#outtime").text("")
-  selected.find("#duration").text("")
-  selected.find("#expectedreturntime").text("")
-  timeoutID = selected.attr("timeoutid")
+
+$("#clockin").click(function stuffInn(){
+  selectedStaffId = $(".selectedstaff").attr("id")
+  selectedStaffinArray = staff.find(staffMember => staffMember.id == selectedStaffId)
+  selectedStaffinArray.status = "In"
+  selectedStaffinArray.outtime = ""
+  selectedStaffinArray.duration = ""
+  selectedStaffinArray.expectedReturnTime = ""
+
+  selectedStaffInTable = $(".selectedstaff")
+  selectedStaffInTable.find("#status").text(selectedStaffinArray.status)
+  selectedStaffInTable.find("#outtime").text(selectedStaffinArray.outtime)
+  selectedStaffInTable.find("#duration").text(selectedStaffinArray.duration)
+  selectedStaffInTable.find("#expectedreturntime").text(selectedStaffinArray.expectedReturnTime)
+
+  timeoutID = selectedStaffInTable.attr("timeoutid")
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
   clearTimeout(timeoutID)
 })
 
 
-$(document).ready(function notifyDelay(){
-  $("#liveToastBtn").click(function(){
-    $(".toast").toast('show');
-    $("#liveToast").toast("show");
-  });
-});
-
-staffUserGet()
-
-
 const drivers = []
 $(document).ready(function(){
-  $("#adddriver").click(function creteDeliveryDriver(){
+  $("#adddriver").click(function addDelivery(){
     vehicle = $("#vehicledata").val()
     driverName = $("#namedata").val()
     driverSurename = $("#surenamedata").val()
     driverTelephone = $("#telephonedata").val()
     driverAddress = $("#addressdata").val()
     driverReturntime = $("#returntimedata").val()
+    console.log(driverReturntime) 
     drivers.push(new DeliverDriver(driverName, driverSurename, vehicle, driverTelephone, driverAddress, driverReturntime))
-    addDelivery()
+    
+
+    driversTableData=""
+    drivers.map(driver => {
+      driversTableData += 
+      `<tr ${driver.id} class="deliverytablerow">
+      <td id="vehicle">${driver.vehicle}</td>
+      <td id="name">${driver.name}</td>
+      <td id="surename">${driver.surename}</td>
+      <td id="telephone">${driver.telephone}</td>
+      <td id="address">${driver.deliveryAddress}</td>
+      <td id="returntime">${driver.returnTime}</td>
+      </tr>`
+    })
+    
+    document.getElementById("deliverydrivers").innerHTML = driversTableData //NOT WORKING WITH JQUERY FOR SOME REASON
   })
 })
 
 
-function addDelivery(){
-  driversTableData=""
-  drivers.map(driver => {
-    driversTableData += 
-    `<tr class="deliverytablerow">
-    <td id="vehicle">${driver.vehicle}</td>
-    <td id="name">${driver.name}</td>
-    <td id="surename">${driver.surename}</td>
-    <td id="telephone">${driver.telephone}</td>
-    <td id="address">${driver.deliveryAddress}</td>
-    <td id="returntime">${driver.returnTime}</td>
-    </tr>`
-  })
-  document.getElementById("deliverydrivers").innerHTML = driversTableData //NOT WORKING WITH JQUERY FOR SOME REASON
-}
 
+
+//HELPER FUNCTIONS_______________________________________________________________
+
+//Togeling the selected class on the table rows (same for staff and delivery drivers!?)
+$(document).ready(function(){
+  $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selectedstaff').siblings().removeClass('selectedstaff')})
+})
+
+$(document).ready(function(){
+  $(document.body).on('click', '.deliverytablerow', function(){$(this).toggleClass('selecteddriver').siblings().removeClass('selecteddriver')})
+})
+
+//Formats time input for delivery to HH:mm
+var cleave = new Cleave("#returntimedata", {
+  time: true,
+  timePattern: ['h', 'm']
+});
