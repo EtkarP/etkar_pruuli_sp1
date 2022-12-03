@@ -100,7 +100,7 @@ function staffMemberIsLate(selectedStaffinArray){
 
 
 
-$("#clockin").click(function stuffInn(){
+$("#clockin").click(function stuffIn(){
   selectedStaffId = $(".selectedstaff").attr("id")
   selectedStaffinArray = staff.find(staffMember => staffMember.id == selectedStaffId)
   selectedStaffinArray.status = "In"
@@ -151,29 +151,37 @@ $(document).ready(function(){
     })
   })
 
-  //!!TOST SHOULD STAY UNTIL CLOSED!!
-  function deliveryDriverIsLate(currentDriver) {
-    duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
-    timeoutID = setTimeout(() => {
-    driverToastContent =
-    `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-    <strong class="me-auto">
-    ${currentDriver.name} ${currentDriver.surename}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body">
-    Should been back at ${currentDriver.returnTime}<br>
-    from ${currentDriver.deliveryAddress}<br><br>
-    Drivers phone number is ${currentDriver.telephone}
-    </div>
-    </div>`
-    document.getElementById("toastConteiner").innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
-    $('.toast').toast('show')
-    $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
-    }, duration)
-    $(`tr[id="${currentDriver.driverID}"]`).attr("timeoutid", timeoutID)
-  }
+  //!!TOST SHOULD STAY UNTIL CLOSED!! cleardriver
+function deliveryDriverIsLate(currentDriver){
+  duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
+  timeoutID = setTimeout(() => {
+  driverToastContent =
+  `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+  <strong class="me-auto">
+  ${currentDriver.name} ${currentDriver.surename}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+  Should been back at ${currentDriver.returnTime}<br>
+  from ${currentDriver.deliveryAddress}<br><br>
+  Drivers phone number is ${currentDriver.telephone}
+  </div>
+  </div>`
+  document.getElementById("toastConteiner").innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
+  $('.toast').toast('show')
+  $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
+  }, duration)
+  $(`tr[id="${currentDriver.driverID}"]`).attr("timeoutid", timeoutID)
+}
+
+
+$("#cleardriver").click(function cleareDelivery(){
+  selectedDriverInTable = $(".selecteddriver").remove()
+  clearTimeout(selectedDriverInTable.attr("timeoutid"))
+  selectedDriverId = selectedDriverInTable.attr("id")
+  drivers.splice(drivers.indexOf(drivers.find(driver => driver.driverID == selectedDriverId)), 1)
+})
 
 
 //HELPER FUNCTIONS_______________________________________________________________
