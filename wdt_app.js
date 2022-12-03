@@ -76,12 +76,12 @@ $("#clockout").click(function staffOut(){
   selectedStaffInTable.find("#duration").text(selectedStaffinArray.duration)
   selectedStaffInTable.find("#expectedreturntime").text(selectedStaffinArray.expectedReturnTime)
   
-  notifyDelay(selectedStaffinArray)
+  staffMemberIsLate(selectedStaffinArray)
 })
 
 
-
-function notifyDelay(selectedStaffinArray){
+//!!TOST SHOULD STAY UNTIL CLOSED!!
+function staffMemberIsLate(selectedStaffinArray){
   timeoutID = setTimeout(() => {
   toastContent =
   `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -123,17 +123,18 @@ $("#clockin").click(function stuffInn(){
 const drivers = []
 $(document).ready(function(){
   $("#adddriver").click(function addDelivery(){
-    vehicle = $("#vehicledata").val()
-    driverName = $("#namedata").val()
-    driverSurename = $("#surenamedata").val()
-    driverTelephone = $("#telephonedata").val()
-    driverAddress = $("#addressdata").val()
-    driverReturntime = $("#returntimedata").val()
-    driverID = "driverID" + setTimeout(Date.now(), 1)
-    drivers.push(new DeliverDriver(driverName, driverSurename, vehicle, driverTelephone, driverAddress, driverReturntime))
+    newDriver = new DeliverDriver(
+    driverName = $("#namedata").val(),
+    driverSurename = $("#surenamedata").val(),
+    vehicle = $("#vehicledata").val(),
+    driverTelephone = $("#telephonedata").val(),
+    driverAddress = $("#addressdata").val(),
+    driverReturntime = $("#returntimedata").val(),
+    driverID = "driverID" + setTimeout(Date.now(), 1))
+    drivers.push(newDriver)
     
     driversTableData =
-      `<tr ${driverID} class="deliverytablerow selecteddriver">
+      `<tr id="${driverID}" class="deliverytablerow">
       <td id="vehicle">${vehicle}</td>
       <td id="name">${driverName}</td>
       <td id="surename">${driverSurename}</td>
@@ -143,9 +144,36 @@ $(document).ready(function(){
       </tr>`
   
     $("#deliverydrivers").append(driversTableData)
+
+    currentDriver = drivers.find(driver => driver.driverID == driverID)
+    
+    deliveryDriverIsLate(currentDriver)
     })
   })
 
+  //!!TOST SHOULD STAY UNTIL CLOSED!!
+  function deliveryDriverIsLate(currentDriver) {
+    duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
+    timeoutID = setTimeout(() => {
+    driverToastContent =
+    `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+    <strong class="me-auto">
+    ${currentDriver.name} ${currentDriver.surename}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+    Should been back at ${currentDriver.returnTime}<br>
+    from ${currentDriver.deliveryAddress}<br><br>
+    Drivers phone number is ${currentDriver.telephone}
+    </div>
+    </div>`
+    document.getElementById("toastConteiner").innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
+    $('.toast').toast('show')
+    $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
+    }, duration)
+    $(`tr[id="${currentDriver.driverID}"]`).attr("timeoutid", timeoutID)
+  }
 
 
 //HELPER FUNCTIONS_______________________________________________________________
