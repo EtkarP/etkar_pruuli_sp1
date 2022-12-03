@@ -17,13 +17,13 @@ class StaffMember extends Employee {
   }
 }
 class DeliverDriver extends Employee {
-  constructor(name, surename, vehicle, telephone, deliveryAddress, returnTime){
+  constructor(name, surename, vehicle, telephone, deliveryAddress, returnTime, driverID){
     super(name, surename)
     this.vehicle = vehicle
     this.telephone = telephone
     this.deliveryAddress = deliveryAddress
     this.returnTime = returnTime
-    this.id = "driverID" + setTimeout( Date.now(), 1)
+    this.driverID = driverID
   }
 }
 
@@ -129,27 +129,22 @@ $(document).ready(function(){
     driverTelephone = $("#telephonedata").val()
     driverAddress = $("#addressdata").val()
     driverReturntime = $("#returntimedata").val()
-    console.log(driverReturntime) 
+    driverID = "driverID" + setTimeout(Date.now(), 1)
     drivers.push(new DeliverDriver(driverName, driverSurename, vehicle, driverTelephone, driverAddress, driverReturntime))
     
-
-    driversTableData=""
-    drivers.map(driver => {
-      driversTableData += 
-      `<tr ${driver.id} class="deliverytablerow">
-      <td id="vehicle">${driver.vehicle}</td>
-      <td id="name">${driver.name}</td>
-      <td id="surename">${driver.surename}</td>
-      <td id="telephone">${driver.telephone}</td>
-      <td id="address">${driver.deliveryAddress}</td>
-      <td id="returntime">${driver.returnTime}</td>
+    driversTableData =
+      `<tr ${driverID} class="deliverytablerow selecteddriver">
+      <td id="vehicle">${vehicle}</td>
+      <td id="name">${driverName}</td>
+      <td id="surename">${driverSurename}</td>
+      <td id="telephone">${driverTelephone}</td>
+      <td id="address">${driverAddress}</td>
+      <td id="returntime">${driverReturntime}</td>
       </tr>`
+  
+    $("#deliverydrivers").append(driversTableData)
     })
-    
-    document.getElementById("deliverydrivers").innerHTML = driversTableData //NOT WORKING WITH JQUERY FOR SOME REASON
   })
-})
-
 
 
 
