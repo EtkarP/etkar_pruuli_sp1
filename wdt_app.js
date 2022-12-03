@@ -151,6 +151,7 @@ $(document).ready(function(){
     })
   })
 
+
   //!!TOST SHOULD STAY UNTIL CLOSED!! cleardriver
 function deliveryDriverIsLate(currentDriver){
   duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
@@ -195,8 +196,28 @@ $(document).ready(function(){
   $(document.body).on('click', '.deliverytablerow', function(){$(this).toggleClass('selecteddriver').siblings().removeClass('selecteddriver')})
 })
 
+//Validating the delivery driver input fields
+//!!Add regex, visual indication of what is missing!!
+$(".driverinput").on("input", function testfunck(){
+  inputs = $(".driverinput")
+  if (  inputs[0].value != "" && 
+        inputs[1].value != "" && 
+        inputs[2].value != "" && 
+        inputs[3].value != "" && 
+        inputs[4].value != "" && 
+        inputs[5].value != ""  ){
+    $("#adddriver").removeClass("disabled")
+}})
+
+
 //Formats time input for delivery to HH:mm
-var cleave = new Cleave("#returntimedata", {
+var cleaveTime = new Cleave("#returntimedata", {
   time: true,
   timePattern: ['h', 'm']
+});
+
+
+var cleave = new Cleave("#telephonedata", {
+  phone: true,
+  phoneRegionCode: 'NO',
 });
