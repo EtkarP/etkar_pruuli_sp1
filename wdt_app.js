@@ -187,6 +187,15 @@ $("#cleardriver").click(function cleareDelivery(){
 })
 
 
+$(document).ready(function digitalClock(){
+  $("#clock").text(moment().format("DD MMMM YYYY, HH:mm:ss"))
+  setInterval(digitalClock, 1000)
+})
+
+
+// setInterval(digitalClock, 1000)
+// digitalClock()
+
 //HELPER FUNCTIONS_______________________________________________________________
 
 //Togeling the selected class on the table rows (same for staff and delivery drivers!?)
@@ -200,7 +209,7 @@ $(document).ready(function(){
 
 //Validating the delivery driver input fields
 //!!Should be added regex, visual indication of what is missing!!
-$(".driverinput").on("input", function testfunck(){
+$(".driverinput").on("input", function validateDelivery(){
   inputs = $(".driverinput")
   if (  inputs[0].value != "" && 
         inputs[1].value != "" && 
