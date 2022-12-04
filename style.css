@@ -1,0 +1,109 @@
+:root {
+  --darkblue: #0e8ea8;
+  --lightblue: #83d1e1;
+  --customblack: #212529;
+  --white: #fff;
+}
+
+body {
+  font-family: Consolas, monospace;
+  color: var(--customblack);
+}
+
+.nav-link {
+  background-color: var(--darkblue);
+  color: var(--white);
+}
+
+.nav-link.active {
+  background-color: var(--darkblue);
+  color: var(--white) !important;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.dropdown-menu {
+  background-color: var(--lightblue);
+}
+
+.dropdown-item {
+  color: var(--customblack);
+}
+
+:is(h1, h2, h3, h4, h5, h6, p) {
+  padding: 1em;
+  font-family: Calibri, sans-serif;
+}
+
+button {
+  margin: 1em 0px;
+}
+
+nav img {
+  width: 20%;
+  height: auto;
+}
+
+.aria-conteiner {
+  border: 0.3px solid var(--customblack);
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.form-conteiner {
+  padding: 12px 12px 30px 12px;
+  background-color: var(--darkblue);
+  color: var(--white);
+  border-radius: 10px;
+  font-weight: bold;
+  border: 0.3px solid var(--customblack);
+}
+
+.selectedstaff,
+.selecteddriver {
+  font-weight: 900;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+th {
+  background-color: var(--darkblue);
+  color: var(--white);
+  padding: 6px 0px;
+}
+
+tbody tr:hover {
+  font-weight: bold;
+}
+
+td {
+  font-family: Calibri, sans-serif;
+}
+
+th,
+td {
+  border: 0.3px solid var(--customblack);
+  border-collapse: collapse;
+}
+
+th:first-of-type {
+  border-top-left-radius: 10px;
+}
+th:last-of-type {
+  border-top-right-radius: 10px;
+}
+tr:last-of-type td:first-of-type {
+  border-bottom-left-radius: 10px;
+}
+tr:last-of-type td:last-of-type {
+  border-bottom-right-radius: 10px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--lightblue) !important;
+}

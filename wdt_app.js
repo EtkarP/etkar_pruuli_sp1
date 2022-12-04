@@ -94,6 +94,7 @@ function staffMemberIsLate(selectedStaffinArray){
   document.getElementById("toastConteiner").innerHTML = toastContent //NOT WORKING WITH JQUERY FOR SOME REASON
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
+
   }, duration*60000)
   $(".selected").attr("timeoutid", timeoutID)
 }
@@ -123,6 +124,7 @@ $("#clockin").click(function stuffIn(){
 const drivers = []
 $(document).ready(function(){
   $("#adddriver").click(function addDelivery(){
+    $(".empty-row").remove()
     newDriver = new DeliverDriver(
     driverName = $("#namedata").val(),
     driverSurename = $("#surenamedata").val(),
@@ -155,6 +157,7 @@ $(document).ready(function(){
   //!!TOST SHOULD STAY UNTIL CLOSED!! cleardriver
 function deliveryDriverIsLate(currentDriver){
   duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
+  console.log(duration)
   timeoutID = setTimeout(() => {
   driverToastContent =
   `<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -193,8 +196,6 @@ $(document).ready(function digitalClock(){
 })
 
 
-// setInterval(digitalClock, 1000)
-// digitalClock()
 
 //HELPER FUNCTIONS_______________________________________________________________
 
