@@ -178,10 +178,12 @@ function deliveryDriverIsLate(currentDriver){
 
 
 $("#cleardriver").click(function cleareDelivery(){
-  selectedDriverInTable = $(".selecteddriver").remove()
-  clearTimeout(selectedDriverInTable.attr("timeoutid"))
-  selectedDriverId = selectedDriverInTable.attr("id")
-  drivers.splice(drivers.indexOf(drivers.find(driver => driver.driverID == selectedDriverId)), 1)
+  if (confirm("Are you sure you want to clear delivery?") == true){
+    selectedDriverInTable = $(".selecteddriver").remove()
+    clearTimeout(selectedDriverInTable.attr("timeoutid"))
+    selectedDriverId = selectedDriverInTable.attr("id")
+    drivers.splice(drivers.indexOf(drivers.find(driver => driver.driverID == selectedDriverId)), 1)
+  } 
 })
 
 
@@ -197,7 +199,7 @@ $(document).ready(function(){
 })
 
 //Validating the delivery driver input fields
-//!!Add regex, visual indication of what is missing!!
+//!!Should be added regex, visual indication of what is missing!!
 $(".driverinput").on("input", function testfunck(){
   inputs = $(".driverinput")
   if (  inputs[0].value != "" && 
