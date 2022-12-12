@@ -1,3 +1,8 @@
+$(document).ready(function digitalClock(){
+  $("#clock").text(moment().format("DD MMMM YYYY, HH:mm:ss"))
+  setInterval(digitalClock, 1000)
+})
+
 class Employee {
   constructor(name, surename) {
     this.name = name
@@ -33,7 +38,7 @@ const staff = []
 $(document).ready(async function staffUserGet(){
   const response = await fetch('https://randomuser.me/api/?results=5&inc=name,email,picture,id')
   staffData = await response.json()
-  staffData = await staffData.results.map(staffMember => 
+  staffData = await staffData.results.map(staffMember =>
   new StaffMember(staffMember.name.first, staffMember.name.last, staffMember.picture.medium, staffMember.email))
   staff.push(...staffData)
   addStaff()
@@ -44,7 +49,7 @@ $(document).ready(async function staffUserGet(){
 function addStaff(){
   staffTableData=""
   staff.map(staffMembers => {
-    staffTableData += 
+    staffTableData +=
     `<tr id=${staffMembers.id} class="stafftablerow">
     <td id="photo"><img src="${staffMembers.photo}"></td>
     <td id="name">${staffMembers.name}</td>
@@ -75,12 +80,11 @@ $("#clockout").click(function staffOut(){
   selectedStaffInTable.find("#outtime").text(selectedStaffinArray.outtime)
   selectedStaffInTable.find("#duration").text(selectedStaffinArray.duration)
   selectedStaffInTable.find("#expectedreturntime").text(selectedStaffinArray.expectedReturnTime)
-  
+
   staffMemberIsLate(selectedStaffinArray)
 })
 
 
-//!!TOST SHOULD STAY UNTIL CLOSED!!
 function staffMemberIsLate(selectedStaffinArray){
   timeoutID = setTimeout(() => {
   toastContent =
@@ -91,14 +95,13 @@ function staffMemberIsLate(selectedStaffinArray){
   <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
   </div>`
-  document.getElementById("toastConteiner").innerHTML = toastContent //NOT WORKING WITH JQUERY FOR SOME REASON
+  document.getElementById("toastConteiner").innerHTML = toastContent 
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
 
   }, duration*60000)
   $(".selected").attr("timeoutid", timeoutID)
 }
-
 
 
 $("#clockin").click(function stuffIn(){
@@ -124,7 +127,6 @@ $("#clockin").click(function stuffIn(){
 const drivers = []
 $(document).ready(function(){
   $("#adddriver").click(function addDelivery(){
-    $(".empty-row").remove()
     newDriver = new DeliverDriver(
     driverName = $("#namedata").val(),
     driverSurename = $("#surenamedata").val(),
@@ -135,26 +137,33 @@ $(document).ready(function(){
     driverID = "driverID" + setTimeout(Date.now(), 1))
     drivers.push(newDriver)
     
+    switch(vehicle){
+      case "Car": vehicle = String.raw`<img class="svg-icon" src="images\caricon.svg" alt="Car" />` 
+      break;
+      case "Motorcycle": vehicle = String.raw`<img class="svg-icon" src="images\motorcycleicon.svg" alt="Motorcycle" />`
+      break;
+    }
+
     driversTableData =
       `<tr id="${driverID}" class="deliverytablerow">
-      <td id="vehicle">${vehicle}</td>
-      <td id="name">${driverName}</td>
-      <td id="surename">${driverSurename}</td>
-      <td id="telephone">${driverTelephone}</td>
-      <td id="address">${driverAddress}</td>
-      <td id="returntime">${driverReturntime}</td>
+      <td class="drivervehicle">${vehicle}</td>
+      <td class="drivername">${driverName}</td>
+      <td class="driversurename">${driverSurename}</td>
+      <td class="drivertelephone">${driverTelephone}</td>
+      <td class="driveraddress">${driverAddress}</td>
+      <td class="driverreturntime">${driverReturntime}</td>
       </tr>`
-  
+
     $("#deliverydrivers").append(driversTableData)
 
     currentDriver = drivers.find(driver => driver.driverID == driverID)
-    
+
     deliveryDriverIsLate(currentDriver)
     })
   })
 
 
-  //!!TOST SHOULD STAY UNTIL CLOSED!! cleardriver
+
 function deliveryDriverIsLate(currentDriver){
   duration = moment(currentDriver.returnTime, 'HH:mm').diff(moment(), 'milliseconds')
   console.log(duration)
@@ -172,7 +181,7 @@ function deliveryDriverIsLate(currentDriver){
   Drivers phone number is ${currentDriver.telephone}
   </div>
   </div>`
-  document.getElementById("toastConteiner").innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
+  document.getElementById('toastConteiner').innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
   }, duration)
@@ -186,14 +195,11 @@ $("#cleardriver").click(function cleareDelivery(){
     clearTimeout(selectedDriverInTable.attr("timeoutid"))
     selectedDriverId = selectedDriverInTable.attr("id")
     drivers.splice(drivers.indexOf(drivers.find(driver => driver.driverID == selectedDriverId)), 1)
-  } 
+  }
 })
 
 
-$(document).ready(function digitalClock(){
-  $("#clock").text(moment().format("DD MMMM YYYY, HH:mm:ss"))
-  setInterval(digitalClock, 1000)
-})
+
 
 
 
@@ -208,18 +214,23 @@ $(document).ready(function(){
   $(document.body).on('click', '.deliverytablerow', function(){$(this).toggleClass('selecteddriver').siblings().removeClass('selecteddriver')})
 })
 
+
 //Validating the delivery driver input fields
-//!!Should be added regex, visual indication of what is missing!!
 $(".driverinput").on("input", function validateDelivery(){
   inputs = $(".driverinput")
-  if (  inputs[0].value != "" && 
-        inputs[1].value != "" && 
-        inputs[2].value != "" && 
-        inputs[3].value != "" && 
-        inputs[4].value != "" && 
-        inputs[5].value != ""  ){
+  console.log(inputs[5].value.length)
+  console.log(inputs[5].value)
+  if( inputs[0].value == "Motorcycle" || "Car" &&
+      inputs[1].value.length > 3 &&
+      inputs[2].value.length > 3 &&
+      inputs[3].value.length > 6 &&
+      inputs[4].value != "" &&
+      inputs[5].value.length > 4){
     $("#adddriver").removeClass("disabled")
-}})
+  }else{
+    $("#adddriver").addClass("disabled")
+  }
+})
 
 
 //Formats time input for delivery to HH:mm
@@ -228,8 +239,9 @@ var cleaveTime = new Cleave("#returntimedata", {
   timePattern: ['h', 'm']
 });
 
-
+//Formats phone input for delivery to 000 00 000
 var cleave = new Cleave("#telephonedata", {
   phone: true,
   phoneRegionCode: 'NO',
 });
+

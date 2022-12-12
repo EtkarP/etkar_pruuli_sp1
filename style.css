@@ -104,6 +104,12 @@ tr:last-of-type td:last-of-type {
   border-bottom-right-radius: 10px;
 }
 
-tbody tr:nth-child(odd) {
-  background-color: var(--lightblue) !important;
+tbody tr {
+  background-color: var(--lightblue);
+}
+
+
+.svg-icon {
+  width: 2rem;
+  fill: var(--customblack);
 }
