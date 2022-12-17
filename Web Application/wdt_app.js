@@ -130,7 +130,7 @@ $(document).ready(function(){
     driverTelephone = $("#telephonedata").val(),
     driverAddress = $("#addressdata").val(),
     driverReturntime = $("#returntimedata").val(),
-    driverID = "driverID" + setTimeout(Date.now(), 1)) // Set the unic ramndom ID
+    driverID = "driverID" + setTimeout(Date.now(), 1))
     drivers.push(newDriver)
     
     switch(vehicle){
@@ -177,7 +177,7 @@ function deliveryDriverIsLate(currentDriver){
   Drivers phone number is ${currentDriver.telephone}
   </div>
   </div>`
-  document.getElementById('toastConteiner').innerHTML = driverToastContent
+  document.getElementById('toastConteiner').innerHTML = driverToastContent //NOT WORKING WITH JQUERY FOR SOME REASON
   $('.toast').toast('show')
   $(`tr[timeoutid="${timeoutID}"]`).removeAttr("timeoutid")
   }, duration)
@@ -195,26 +195,6 @@ $("#cleardriver").click(function cleareDelivery(){
 })
 
 
-
-$(document).ready(function digitalClock(){
-  $("#clock").text(moment().format("DD MMMM YYYY, HH:mm:ss"))
-  setTimeout(digitalClock, 1000)
-})
-
-
-//HELPER FUNCTIONS_______________________________________________________________
-
-//Togeling the selected class on the table rows
-$(document).ready(function(){
-  $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selectedstaff').siblings().removeClass('selectedstaff')})
-})
-
-$(document).ready(function(){
-  $(document.body).on('click', '.deliverytablerow', function(){$(this).toggleClass('selecteddriver').siblings().removeClass('selecteddriver')})
-})
-
-
-//Validating the delivery driver input fields
 $(".driverinput").on("input", function validateDelivery(){
   inputs = $(".driverinput")
   console.log(inputs[5].value.length)
@@ -232,15 +212,33 @@ $(".driverinput").on("input", function validateDelivery(){
 })
 
 
+$(document).ready(function digitalClock(){
+  $("#clock").text(moment().format("DD MMMM YYYY, HH:mm:ss"))
+  setTimeout(digitalClock, 1000)
+})
+
+
+//HELPER FUNCTIONS_______________________________________________________________
+
+//Togeling the selected class on the table rows (same for staff and delivery drivers!?)
+$(document).ready(function(){
+  $(document.body).on('click', '.stafftablerow', function(){$(this).toggleClass('selectedstaff').siblings().removeClass('selectedstaff')})
+})
+
+$(document).ready(function(){
+  $(document.body).on('click', '.deliverytablerow', function(){$(this).toggleClass('selecteddriver').siblings().removeClass('selecteddriver')})
+})
+
+
 //Formats time input for delivery to HH:mm
 var cleaveTime = new Cleave("#returntimedata", {
   time: true,
   timePattern: ['h', 'm']
-});
+})
 
 //Formats phone input for delivery to 000 00 000
 var cleave = new Cleave("#telephonedata", {
   phone: true,
   phoneRegionCode: 'NO',
-});
+})
 

@@ -14,9 +14,9 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
   <link href="style.css" rel="stylesheet" />
 
-  <script defer src="cleave.js"></script>
-  <script defer src="cleave-phone.no.js"></script>
-  <script defer src="moment.js"></script>
+  <script defer src="formatters/cleave.js"></script>
+  <script defer src="formatters/cleave-phone.no.js"></script>
+  <script defer src="formatters/moment.js"></script>
   <script defer src="wdt_app.js"></script>
   <title>WDT Dashboard</title>
 </head>
@@ -156,11 +156,11 @@
     </div>
   </div>
 
-  <div class="clock-conteiner container-md text-end">
-    <div id="clock"></div>
-  </div>
-
   <div id="toastConteiner" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
+  
+  <div id="clock" class="clock-conteiner container-md aria-conteiner text-end"></div>
+
+  
 </body>
 
 </html>
