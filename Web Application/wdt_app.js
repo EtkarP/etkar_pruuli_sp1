@@ -197,8 +197,6 @@ $("#cleardriver").click(function cleareDelivery(){
 
 $(".driverinput").on("input", function validateDelivery(){
   inputs = $(".driverinput")
-  console.log(inputs[5].value.length)
-  console.log(inputs[5].value)
   if( inputs[0].value == "Motorcycle" || inputs[0].value == "Car" &&
       inputs[1].value.length > 3 &&
       inputs[2].value.length > 3 &&
